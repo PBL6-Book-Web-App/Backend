@@ -2,7 +2,7 @@ import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { ApiBearerAuth, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { UpsertInteractionByBookIdRequestBody } from "./upsertInteractionByBookId.request-body";
-import { UpsertInteractionByBookIdCommand } from "./UpsertInteractionByBookId.command";
+import { UpsertInteractionByBookIdCommand } from "./upsertInteractionByBookId.command";
 import { AuthenGuard } from "src/common/guard/authen.guard";
 import { RequestUser } from "src/common/decorator/requestUser.decorator";
 import { LoginUserDto } from "src/common/dto/loginUser.dto";

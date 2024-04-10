@@ -1,8 +1,7 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { PrismaService } from "src/database";
-import { UpsertInteractionByBookIdCommand } from "./UpsertInteractionByBookId.command";
+import { UpsertInteractionByBookIdCommand } from "./upsertInteractionByBookId.command";
 import { NotFoundException } from "@nestjs/common";
-import { getDateNow } from "src/common/utils/date";
 import { InteractionType } from "@prisma/client";
 
 @CommandHandler(UpsertInteractionByBookIdCommand)
