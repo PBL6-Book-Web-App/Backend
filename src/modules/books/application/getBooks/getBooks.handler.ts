@@ -93,8 +93,6 @@ export class GetBooksHandler implements IQueryHandler<GetBooksQuery> {
       });
     }
 
-    console.log({ price: this.getMinMaxCondition(price) });
-
     if (averageRating) {
       andWhereConditions.push({
         price: this.getMinMaxCondition(averageRating),
