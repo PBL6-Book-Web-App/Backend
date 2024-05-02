@@ -6,6 +6,7 @@ import { AuthModule } from "./modules/auth";
 import { BookModule } from "./modules/books";
 import { InteractionModule } from "./modules/interaction";
 import { FileModule } from "./modules/file";
+import { SelfModule } from "./modules/self";
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { FileModule } from "./modules/file";
     BookModule,
     PassportModule,
     InteractionModule,
+    SelfModule,
     ConfigModule.forRoot(),
   ],
   controllers: [],
