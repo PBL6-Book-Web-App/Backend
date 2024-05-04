@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Language } from "@prisma/client";
 import { Transform, Type } from "class-transformer";
 import {
+  IsDate,
   IsEnum,
   IsInt,
   IsISO8601,
@@ -68,7 +69,8 @@ export class CreateBookRequestBody {
     example: "2002-07-05",
   })
   @IsOptional()
-  @IsISO8601()
+  @IsDate()
+  @Transform(({ value }) => new Date(value))
   releaseDate?: Date;
 
   @ApiPropertyOptional({
