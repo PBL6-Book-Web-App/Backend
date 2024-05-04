@@ -146,9 +146,9 @@ export class CreateBookRequestBody {
       "073bdc58-5a58-4293-a5c9-51a31643d1b8,132bdc58-5a58-4293-a5c9-51a31643d1b8",
   })
   @IsOptional()
-  @IsUUID("all", { always: true })
   @Transform(({ value }) =>
     typeof value === "string" ? value.split(",") : [value]
   )
+  @IsUUID("all", { each: true })
   authorIds: string[];
 }
