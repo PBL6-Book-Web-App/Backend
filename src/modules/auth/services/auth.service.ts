@@ -34,13 +34,13 @@ export class AuthService {
     const [accessToken, refreshToken] = await Promise.all([
       this.signJwt({
         user,
-        timeString: '15m',
-        secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+        timeString: "120m",
+        secret: this.configService.get<string>("ACCESS_TOKEN_SECRET"),
       }),
       this.signJwt({
         user,
-        timeString: '7d',
-        secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
+        timeString: "7d",
+        secret: this.configService.get<string>("REFRESH_TOKEN_SECRET"),
       }),
     ]);
 
