@@ -20,7 +20,7 @@ export class GetUsersHandler implements IQueryHandler<GetUsersQuery> {
 
     const response = {
       meta: {
-        page,
+        page: page + 1,
         perPage,
         total,
       },

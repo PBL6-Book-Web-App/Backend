@@ -20,7 +20,7 @@ export class GetBooksHandler implements IQueryHandler<GetBooksQuery> {
 
     const response = {
       meta: {
-        page,
+        page: page + 1,
         perPage,
         total,
       },

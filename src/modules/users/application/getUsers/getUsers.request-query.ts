@@ -36,13 +36,14 @@ export class GetUsersRequestQuery {
 
   @ApiPropertyOptional({
     description: "Number of records to skip and then return the remainder",
-    example: 0,
+    example: 1,
   })
   @IsOptional()
+  @Transform(({ value }) => value - 1)
   @Type(() => Number)
   @IsInt()
   @Min(0)
-  page?: number = 0;
+  page?: number = 1;
 
   @ApiPropertyOptional({
     description: "Number of records to return and then skip over the remainder",

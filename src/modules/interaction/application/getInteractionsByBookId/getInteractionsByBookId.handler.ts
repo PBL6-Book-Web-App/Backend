@@ -26,7 +26,7 @@ export class GetInteractionsByBookIdHandler
 
     const response = {
       meta: {
-        page,
+        page: page + 1,
         perPage,
         total,
       },
