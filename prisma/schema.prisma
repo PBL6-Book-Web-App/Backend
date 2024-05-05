@@ -54,6 +54,12 @@ enum InteractionType {
   FAVOURITE_BOOK
 }
 
+enum PeriodType {
+  DAYS
+  WEEK
+  MONTH
+}
+
 model User {
   id        String    @id(map: "pk_user") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
   name      String    @map("name") @db.VarChar(255)
@@ -160,4 +166,11 @@ model Interaction {
 
   @@unique([userId, bookId, type])
   @@map("interaction")
+}
+
+model SettingCrawl {
+  id         String     @id(map: "pk_setting_crawl") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  periodType PeriodType @map("period_type")
+  value      String     @map("value") @db.VarChar(255)
+  time       String     @map("time")
 }

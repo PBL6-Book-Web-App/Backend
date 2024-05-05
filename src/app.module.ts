@@ -7,6 +7,7 @@ import { BookModule } from "./modules/books";
 import { InteractionModule } from "./modules/interaction";
 import { FileModule } from "./modules/file";
 import { SelfModule } from "./modules/self";
+import { SettingModule } from "./modules/setting";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { SelfModule } from "./modules/self";
     PassportModule,
     InteractionModule,
     SelfModule,
+    SettingModule,
     ConfigModule.forRoot(),
   ],
   controllers: [],

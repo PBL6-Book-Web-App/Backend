@@ -38,3 +38,8 @@ export * from "./create-interaction.dto";
 export * from "./update-interaction.dto";
 export * from "./interaction.entity";
 export * from "./interaction.dto";
+export * from "./connect-setting-crawl.dto";
+export * from "./create-setting-crawl.dto";
+export * from "./update-setting-crawl.dto";
+export * from "./setting-crawl.entity";
+export * from "./setting-crawl.dto";
