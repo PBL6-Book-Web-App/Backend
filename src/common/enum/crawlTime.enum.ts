@@ -8,7 +8,7 @@ export enum CrawlValueWeekEnum {
   SUNDAY,
 }
 
-export enum CrawlValueMonthEnum {
+export enum CrawlValueDaysEnum {
   JANUARY,
   FEBRUARY,
   MARCH,

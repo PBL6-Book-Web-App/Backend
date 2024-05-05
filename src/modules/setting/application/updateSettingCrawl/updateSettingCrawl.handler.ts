@@ -4,7 +4,7 @@ import { UpdateSettingCrawlRequestBody } from "./updateSettingCrawl.request-body
 import { PrismaService } from "src/database";
 import { PeriodType } from "@prisma/client";
 import {
-  CrawlValueMonthEnum,
+  CrawlValueDaysEnum,
   CrawlValueWeekEnum,
 } from "src/common/enum/crawlTime.enum";
 import { BadRequestException } from "@nestjs/common";
@@ -50,12 +50,21 @@ export class UpdateSettingCrawlHandler
   private validate(option: { periodType: PeriodType; value: string }) {
     const { periodType, value } = option;
 
-    if (periodType === PeriodType.MONTH) {
+    if (periodType === PeriodType.DAYS) {
       const [monthString, day] = value.split("-");
-      if (Object.values(CrawlValueMonthEnum).includes(monthString as any)) {
-        const month = CrawlValueMonthEnum[monthString];
+      if (Object.values(CrawlValueDaysEnum).includes(monthString as any)) {
+        const month = CrawlValueDaysEnum[monthString];
         return this.validateMonthDay({ month, day: Number(day) });
       }
+    }
+
+    if (
+      periodType === PeriodType.MONTH &&
+      Number(value) &&
+      Number(value) > 0 &&
+      Number(value) <= 31
+    ) {
+      return true;
     }
 
     if (
@@ -71,27 +80,27 @@ export class UpdateSettingCrawlHandler
   }
 
   private validateMonthDay(option: {
-    month: CrawlValueMonthEnum;
+    month: CrawlValueDaysEnum;
     day: number;
   }): boolean {
     const { month, day } = option;
     const validMonth = {
       31: [
-        CrawlValueMonthEnum.JANUARY,
-        CrawlValueMonthEnum.MARCH,
-        CrawlValueMonthEnum.MAY,
-        CrawlValueMonthEnum.JULY,
-        CrawlValueMonthEnum.AUGUST,
-        CrawlValueMonthEnum.OCTOBER,
-        CrawlValueMonthEnum.DECEMBER,
+        CrawlValueDaysEnum.JANUARY,
+        CrawlValueDaysEnum.MARCH,
+        CrawlValueDaysEnum.MAY,
+        CrawlValueDaysEnum.JULY,
+        CrawlValueDaysEnum.AUGUST,
+        CrawlValueDaysEnum.OCTOBER,
+        CrawlValueDaysEnum.DECEMBER,
       ],
       30: [
-        CrawlValueMonthEnum.APRIL,
-        CrawlValueMonthEnum.JUNE,
-        CrawlValueMonthEnum.SEPTEMBER,
-        CrawlValueMonthEnum.NOVEMBER,
+        CrawlValueDaysEnum.APRIL,
+        CrawlValueDaysEnum.JUNE,
+        CrawlValueDaysEnum.SEPTEMBER,
+        CrawlValueDaysEnum.NOVEMBER,
       ],
-      29: [CrawlValueMonthEnum.FEBRUARY],
+      29: [CrawlValueDaysEnum.FEBRUARY],
     };
 
     for (const [key, value] of Object.entries(validMonth)) {
