@@ -102,21 +102,22 @@ model Role {
 }
 
 model Book {
-  id              String    @id(map: "pk_book") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
-  title           String    @map("title") @db.VarChar(255)
-  description     String?   @map("description") @db.Text
-  bookCover       String?   @map("book_cover") @db.VarChar(255)
-  language        Language? @map("language")
-  imageUrl        String?   @map("image_url") @db.VarChar(255)
-  releaseDate     DateTime? @map("release_date") @db.Date
-  publisher       String?   @map("publisher") @db.VarChar(255)
-  numberOfPages   Int?      @map("number_of_pages") @db.Integer
-  price           Float?    @map("price") @db.Real
-  averageRating   Float?    @map("average_rating") @db.Real
-  numberOfRatings Int?      @map("number_of_ratings") @db.Integer
-  numberOfReviews Int?      @map("number_of_reviews") @db.Integer
-  sourceId        String    @map("source_id") @db.Uuid
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  id                      String    @id(map: "pk_book") @default(dbgenerated("uuid_generate_v4()")) @map("id")
+  title                   String    @map("title") @db.VarChar(255)
+  description             String?   @map("description") @db.Text
+  preprocessedDescription String?   @map("preprocessed_description") @db.Text
+  bookCover               String?   @map("book_cover") @db.VarChar(255)
+  language                Language? @map("language")
+  imageUrl                String?   @map("image_url") @db.VarChar(255)
+  releaseDate             DateTime? @map("release_date") @db.Date
+  publisher               String?   @map("publisher") @db.VarChar(255)
+  numberOfPages           Int?      @map("number_of_pages") @db.Integer
+  price                   Float?    @map("price") @db.Real
+  averageRating           Float?    @map("average_rating") @db.Real
+  numberOfRatings         Int?      @map("number_of_ratings") @db.Integer
+  numberOfReviews         Int?      @map("number_of_reviews") @db.Integer
+  sourceId                Int    @map("source_id") @db.Integer
+  createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
 
   source       Source         @relation(fields: [sourceId], onDelete: Cascade, onUpdate: Cascade, references: [id])
   authors      AuthorToBook[]
@@ -137,7 +138,7 @@ model Author {
 
 model AuthorToBook {
   authorId String @map("author_id") @db.Uuid
-  bookId   String @map("book_id") @db.Uuid
+  bookId   String @map("book_id") 
 
   author Author @relation(fields: [authorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   book   Book   @relation(fields: [bookId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -147,7 +148,7 @@ model AuthorToBook {
 }
 
 model Source {
-  id   String @id(map: "pk_source") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
+  id   Int    @id(map: "pk_source") @map("id") @db.Integer
   name String @map("name") @db.VarChar(255)
 
   books Book[]
@@ -157,7 +158,7 @@ model Source {
 
 model Interaction {
   userId String          @map("user_id") @db.Uuid
-  bookId String          @map("book_id") @db.Uuid
+  bookId String          @map("book_id") 
   type   InteractionType @default(VIEW) @map("type")
   value  Float           @map("value") @db.Real
 

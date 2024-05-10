@@ -1,3 +1,3 @@
 export class ConnectSourceDto {
-  id: string;
+  id: number;
 }

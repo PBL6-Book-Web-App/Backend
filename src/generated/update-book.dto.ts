@@ -28,6 +28,13 @@ export class UpdateBookDto {
   })
   @IsOptional()
   @IsString()
+  preprocessedDescription?: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
   bookCover?: string | null;
   @ApiProperty({
     enum: Language,

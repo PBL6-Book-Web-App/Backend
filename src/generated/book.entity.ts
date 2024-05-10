@@ -22,6 +22,11 @@ export class BookEntity {
     required: false,
     nullable: true,
   })
+  preprocessedDescription: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
   bookCover: string | null;
   @ApiProperty({
     enum: Language,
@@ -82,9 +87,11 @@ export class BookEntity {
   })
   numberOfReviews: number | null;
   @ApiProperty({
+    type: "integer",
+    format: "int32",
     required: false,
   })
-  sourceId: string;
+  sourceId: number;
   @ApiProperty({
     type: "string",
     format: "date-time",

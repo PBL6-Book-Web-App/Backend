@@ -27,6 +27,13 @@ export class CreateBookDto {
   })
   @IsOptional()
   @IsString()
+  preprocessedDescription?: string;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
   bookCover?: string;
   @ApiProperty({
     enum: Language,

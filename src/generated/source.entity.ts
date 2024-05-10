@@ -3,9 +3,11 @@ import { BookEntity } from "./book.entity";
 
 export class SourceEntity {
   @ApiProperty({
+    type: "integer",
+    format: "int32",
     required: false,
   })
-  id: string;
+  id: number;
   @ApiProperty({
     required: false,
   })

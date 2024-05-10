@@ -14,7 +14,10 @@ CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE', 'OTHER');
 CREATE TYPE "Language" AS ENUM ('VIETNAMESE', 'ENGLISH');
 
 -- CreateEnum
-CREATE TYPE "InteractionType" AS ENUM ('RATING', 'VIEW', 'BUY');
+CREATE TYPE "InteractionType" AS ENUM ('RATING', 'VIEW', 'FAVOURITE_BOOK');
+
+-- CreateEnum
+CREATE TYPE "PeriodType" AS ENUM ('DAYS', 'WEEK', 'MONTH');
 
 -- CreateTable
 CREATE TABLE "user" (
@@ -53,9 +56,10 @@ CREATE TABLE "role" (
 
 -- CreateTable
 CREATE TABLE "book" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
     "title" VARCHAR(255) NOT NULL,
     "description" TEXT,
+    "preprocessed_description" TEXT,
     "book_cover" VARCHAR(255),
     "language" "Language",
     "image_url" VARCHAR(255),
@@ -66,7 +70,7 @@ CREATE TABLE "book" (
     "average_rating" REAL,
     "number_of_ratings" INTEGER,
     "number_of_reviews" INTEGER,
-    "source_id" UUID NOT NULL,
+    "source_id" INTEGER NOT NULL,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "pk_book" PRIMARY KEY ("id")
@@ -84,14 +88,13 @@ CREATE TABLE "author" (
 -- CreateTable
 CREATE TABLE "author_to_book" (
     "author_id" UUID NOT NULL,
-    "book_id" UUID NOT NULL
+    "book_id" TEXT NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "source" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" INTEGER NOT NULL,
     "name" VARCHAR(255) NOT NULL,
-    "type" VARCHAR(255) NOT NULL,
 
     CONSTRAINT "pk_source" PRIMARY KEY ("id")
 );
@@ -99,9 +102,19 @@ CREATE TABLE "source" (
 -- CreateTable
 CREATE TABLE "interaction" (
     "user_id" UUID NOT NULL,
-    "book_id" UUID NOT NULL,
+    "book_id" TEXT NOT NULL,
     "type" "InteractionType" NOT NULL DEFAULT 'VIEW',
     "value" REAL NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "SettingCrawl" (
+    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "period_type" "PeriodType" NOT NULL,
+    "value" VARCHAR(255) NOT NULL,
+    "time" TEXT NOT NULL,
+
+    CONSTRAINT "pk_setting_crawl" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -114,7 +127,7 @@ CREATE UNIQUE INDEX "ixuq_token_user_device" ON "token"("device_id", "user_id");
 CREATE UNIQUE INDEX "author_to_book_author_id_book_id_key" ON "author_to_book"("author_id", "book_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "interaction_user_id_book_id_key" ON "interaction"("user_id", "book_id");
+CREATE UNIQUE INDEX "interaction_user_id_book_id_type_key" ON "interaction"("user_id", "book_id", "type");
 
 -- AddForeignKey
 ALTER TABLE "user" ADD CONSTRAINT "fk_user_role" FOREIGN KEY ("role_id") REFERENCES "role"("id") ON DELETE CASCADE ON UPDATE CASCADE;

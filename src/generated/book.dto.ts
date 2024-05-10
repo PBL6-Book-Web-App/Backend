@@ -19,6 +19,11 @@ export class BookDto {
     required: false,
     nullable: true,
   })
+  preprocessedDescription: string | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
   bookCover: string | null;
   @ApiProperty({
     enum: Language,
