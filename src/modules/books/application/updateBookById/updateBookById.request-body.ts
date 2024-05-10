@@ -133,14 +133,6 @@ export class UpdateBookByIdRequestBody {
   numberOfReviews?: number;
 
   @ApiPropertyOptional({
-    description: "Id of source",
-    example: "073bdc58-5a58-4293-a5c9-51a31643d1b8",
-  })
-  @IsOptional()
-  @IsUUID()
-  sourceId?: string;
-
-  @ApiPropertyOptional({
     description: "Id of authors",
     example:
       "073bdc58-5a58-4293-a5c9-51a31643d1b8,132bdc58-5a58-4293-a5c9-51a31643d1b8",

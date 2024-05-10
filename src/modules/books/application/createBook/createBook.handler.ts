@@ -28,7 +28,6 @@ export class CreateBookHandler implements ICommandHandler<CreateBookCommand> {
       averageRating,
       numberOfRatings,
       numberOfReviews,
-      sourceId,
       authorIds,
     } = body;
 
@@ -48,7 +47,7 @@ export class CreateBookHandler implements ICommandHandler<CreateBookCommand> {
         averageRating,
         numberOfRatings,
         numberOfReviews,
-        sourceId,
+        sourceId: 2,
       },
     });
 

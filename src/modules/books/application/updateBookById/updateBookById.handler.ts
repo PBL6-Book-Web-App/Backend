@@ -32,7 +32,6 @@ export class UpdateBookByIdHandler
       averageRating,
       numberOfRatings,
       numberOfReviews,
-      sourceId,
       authorIds,
     } = body;
 
@@ -53,7 +52,6 @@ export class UpdateBookByIdHandler
         averageRating,
         numberOfRatings,
         numberOfReviews,
-        sourceId,
       },
     });
 
