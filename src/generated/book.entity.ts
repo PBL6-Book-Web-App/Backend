@@ -100,6 +100,11 @@ export class BookEntity {
   createdAt: Date;
   @ApiProperty({
     required: false,
+    nullable: true,
+  })
+  categories: string | null;
+  @ApiProperty({
+    required: false,
   })
   source?: SourceEntity;
   @ApiProperty({

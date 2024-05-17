@@ -111,4 +111,11 @@ export class UpdateBookDto {
   @IsOptional()
   @IsInt()
   numberOfReviews?: number | null;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  categories?: string | null;
 }

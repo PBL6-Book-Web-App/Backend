@@ -74,7 +74,7 @@ export class CreateUserRequestBody {
   @IsEnum(Gender)
   gender: Gender;
 
-  @ApiPropertyOptional({ description: "Function id of user", example: 5 })
+  @ApiPropertyOptional({ description: "Function id of user", example: 2 })
   @IsOptional()
   @IsNumber()
   roleId?: number;

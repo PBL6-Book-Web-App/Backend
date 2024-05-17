@@ -89,4 +89,9 @@ export class BookDto {
     required: false,
   })
   createdAt: Date;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  categories: string | null;
 }

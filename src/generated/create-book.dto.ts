@@ -110,4 +110,11 @@ export class CreateBookDto {
   @IsOptional()
   @IsInt()
   numberOfReviews?: number;
+  @ApiProperty({
+    required: false,
+    nullable: true,
+  })
+  @IsOptional()
+  @IsString()
+  categories?: string;
 }
