@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { InteractionType } from "@prisma/client";
-import { IsEnum, IsOptional, IsPositive, IsUUID, Max } from "class-validator";
+import { IsEnum, IsOptional, IsPositive, IsString, IsUUID, Max } from "class-validator";
 
 export class UpsertInteractionByBookIdRequestBody {
   @ApiProperty({
     description: "Id of Book",
     example: "0d24551e-57f0-4702-bdd6-535d010df643",
   })
-  @IsUUID()
+  @IsString()
   bookId: string;
 
   @ApiProperty({

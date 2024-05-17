@@ -33,10 +33,10 @@ export class UpdateUserByIdHandler
         bookId,
         userId,
         type,
-        value,
+        value: newValue,
       },
       update: {
-        value,
+        value: newValue,
       },
     });
   }
@@ -53,20 +53,20 @@ export class UpdateUserByIdHandler
       return value;
     }
 
-    const prevInteraction = await this.dbContext.interaction.findUnique({
-      where: {
-        userId_bookId_type: {
-          bookId,
-          userId,
-          type,
-        },
-      },
-      select: {
-        value: true,
-      },
-    });
+    // const prevInteraction = await this.dbContext.interaction.findUnique({
+    //   where: {
+    //     userId_bookId_type: {
+    //       bookId,
+    //       userId,
+    //       type,
+    //     },
+    //   },
+    //   select: {
+    //     value: true,
+    //   },
+    // });
 
-    return prevInteraction.value + 1;
+    // return prevInteraction? prevInteraction.value + 1 : 1;
   }
 
   private async validate(option: { bookId: string; userId: string }) {

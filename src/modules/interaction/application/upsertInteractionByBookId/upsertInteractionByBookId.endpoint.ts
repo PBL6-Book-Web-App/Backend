@@ -18,7 +18,7 @@ export class UpdateInteractionByBookIdEndpoint {
   constructor(protected commandBus: CommandBus) {}
 
   @ApiOperation({ description: "Upsert a reaction" })
-  @Post(":bookId")
+  @Post()
   public update(
     @Body() body: UpsertInteractionByBookIdRequestBody,
     @RequestUser() user: LoginUserDto
