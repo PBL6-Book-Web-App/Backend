@@ -8,6 +8,7 @@ import { InteractionModule } from "./modules/interaction";
 import { FileModule } from "./modules/file";
 import { SelfModule } from "./modules/self";
 import { SettingModule } from "./modules/setting";
+import { DashboardModule } from "./modules/dashboard";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SettingModule } from "./modules/setting";
     InteractionModule,
     SelfModule,
     SettingModule,
+    DashboardModule,
     ConfigModule.forRoot(),
   ],
   controllers: [],

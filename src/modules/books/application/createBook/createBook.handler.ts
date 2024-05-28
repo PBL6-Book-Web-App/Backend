@@ -3,8 +3,6 @@ import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { CreateBookCommand } from "./createBook.command";
 import { CreateBookRequestBody } from "./createBook.request-body";
 import { PrismaService } from "src/database";
-import * as dayjs from "dayjs";
-import { hashString } from "src/common/utils/string";
 
 @CommandHandler(CreateBookCommand)
 export class CreateBookHandler implements ICommandHandler<CreateBookCommand> {
