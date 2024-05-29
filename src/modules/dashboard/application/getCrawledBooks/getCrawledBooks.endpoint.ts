@@ -14,9 +14,9 @@ import { GetCrawledBooksRequestQuery } from "./getCrawledBooks.request-query";
   path: "dashboard/crawled-books",
   version: "1",
 })
-// @ApiBearerAuth()
-// @UseGuards(AuthenGuard, RoleGuard)
-// @Role(RoleType.ADMIN)
+@ApiBearerAuth()
+@UseGuards(AuthenGuard, RoleGuard)
+@Role(RoleType.ADMIN)
 export class GetCrawledBooksEndpoint {
   constructor(protected queryBus: QueryBus) {}
 

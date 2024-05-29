@@ -3,6 +3,7 @@ import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { PrismaService } from "src/database";
 import { GetCrawledBooksQuery } from "./getCrawledBooks.query";
 import * as dayjs from "dayjs";
+import * as _ from "lodash";
 
 @QueryHandler(GetCrawledBooksQuery)
 export class GetCrawledBooksHandler
@@ -34,12 +35,23 @@ export class GetCrawledBooksHandler
 
     const groupedTimesCreatedAt = this.groupTimesCreatedAt(allTimesCreatedAt);
 
-    const statisticsCrawledBooks = await this.getStatisticsCrawledBooks({
+    const result = await this.mapStatisticsCrawledBooks({
       sourceId: query.sourceId,
       groupedTimesCreatedAt
     })
 
-    return statisticsCrawledBooks;
+    return result;
+  }
+
+  private async mapStatisticsCrawledBooks (options: {sourceId: number, groupedTimesCreatedAt: Date[]}) {
+    const {sourceId, groupedTimesCreatedAt} = options;
+
+    const statisticsCrawledBooks = await this.getStatisticsCrawledBooks({
+      sourceId,
+      groupedTimesCreatedAt
+    })
+
+    return _.groupBy(statisticsCrawledBooks, 'sourceId') ;
   }
 
   private groupTimesCreatedAt(allTimesCreatedAt: Set<Date>) {
@@ -79,9 +91,10 @@ export class GetCrawledBooksHandler
             sourceId
           }
         }) ) 
-      : await Promise.all(groupedTimesCreatedAt.map(async createdAt => {
-          const results = [];
-          for (const i of [1, 4]) {
+      : await Promise.all(groupedTimesCreatedAt.flatMap(async createdAt => {
+        const results = [];
+          
+        for (const i of [1, 4]) {
               const countBooks = await this.dbContext.book.count({
                   where: {
                       sourceId: i,
@@ -91,15 +104,18 @@ export class GetCrawledBooksHandler
                       }
                   },
               });
-              results.push({
+
+              if (countBooks > 0) {
+                results.push({
                   createdAt,
                   countBooks,
                   sourceId: i
-              });
+                });
+              }
           }
           return results;
       }))
 
-    return statisticsCrawledBooks
+    return statisticsCrawledBooks.flat()
   }
 }
