@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsUUID } from "class-validator";
+import { IsString } from "class-validator";
 
 export class GetInteractionsByBookIdAndUserIdRequestParam {
   @ApiProperty({
@@ -13,6 +13,6 @@ export class GetInteractionsByBookIdAndUserIdRequestParam {
     description: "Search by user id",
     example: "073bdc58-5a58-4293-a5c9-51a31643d1b8",
   })
-  @IsUUID()
+  @IsString()
   userId: string;
 }

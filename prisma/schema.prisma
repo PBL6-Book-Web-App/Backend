@@ -61,7 +61,7 @@ enum PeriodType {
 }
 
 model User {
-  id        String    @id(map: "pk_user") @default(dbgenerated("uuid_generate_v4()")) @map("id") 
+  id        String    @id(map: "pk_user") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.VarChar(255)
   name      String    @map("name") @db.VarChar(255)
   country   String?   @default("Viet Nam") @map("country") @db.VarChar(255)
   avatar    String?   @map("avatar") @db.VarChar(255)
@@ -83,7 +83,7 @@ model User {
 model Token {
   id           String @id(map: "pk_token") @default(dbgenerated("uuid_generate_v4()")) @map("id") @db.Uuid
   deviceId     String @map("device_id")
-  userId       String @map("user_id") 
+  userId       String @map("user_id") @db.VarChar(255)
   refreshToken String @map("refresh_token") @db.VarChar(255)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade, map: "fk_token_user")
@@ -158,7 +158,7 @@ model Source {
 }
 
 model Interaction {
-  userId String          @map("user_id") 
+  userId String          @map("user_id") @db.VarChar(255)
   bookId String          @map("book_id")
   type   InteractionType @default(VIEW) @map("type")
   value  Float           @map("value") @db.Real
