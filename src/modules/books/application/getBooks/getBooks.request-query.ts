@@ -69,7 +69,6 @@ export class GetBooksRequestQuery {
     example: 1,
   })
   @IsOptional()
-  @Transform(({ value }) => value - 1)
   @Type(() => Number)
   @IsInt()
   @Min(1)
