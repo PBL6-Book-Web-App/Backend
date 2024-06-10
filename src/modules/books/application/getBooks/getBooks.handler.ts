@@ -118,6 +118,10 @@ export class GetBooksHandler implements IQueryHandler<GetBooksQuery> {
           releaseDate: true,
           price: true,
           averageRating: true,
+          numberOfRatings: true,
+          numberOfPages: true,
+          numberOfReviews: true,
+          publisher: true,
           authors: {
             select: {
               author: true,
