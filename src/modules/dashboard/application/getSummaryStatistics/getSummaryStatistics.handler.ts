@@ -10,7 +10,7 @@ export class GetSummaryStatisticsHandler
   implements IQueryHandler<GetSummaryStatisticsQuery> {
   constructor(
     private readonly dbContext: PrismaService,
-    private readonly dashboardService: DashboardSersvice
+    private readonly dashboardService: DashboardSersvice,
   ) { }
 
   public async execute(
@@ -28,13 +28,16 @@ export class GetSummaryStatisticsHandler
 
     const crawledDays = await this.dashboardService.getCrawledDaysBySourceId();
 
+    const numberOfUsers = await this.dbContext.user.count()
+
     return {
+      numberOfUsers,
       sources: sources.map(x => ({
         id: x.id,
         name: x.name,
         numberOfBooks: x._count.books
       })),
-      crawledDays
+      crawledDays,
     };
   }
 }

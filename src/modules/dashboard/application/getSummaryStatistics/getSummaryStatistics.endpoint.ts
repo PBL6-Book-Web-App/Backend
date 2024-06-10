@@ -14,8 +14,8 @@ import { GetSummaryStatisticsQuery } from "./getSummaryStatistics.query";
   version: "1",
 })
 @ApiBearerAuth()
-@UseGuards(AuthenGuard, RoleGuard)
-@Role(RoleType.ADMIN)
+// @UseGuards(AuthenGuard, RoleGuard)
+// @Role(RoleType.ADMIN)
 export class GetSummaryStatisticsEndpoint {
   constructor(protected queryBus: QueryBus) {}
 

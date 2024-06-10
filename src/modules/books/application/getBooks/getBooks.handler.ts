@@ -20,7 +20,7 @@ export class GetBooksHandler implements IQueryHandler<GetBooksQuery> {
 
     const response = {
       meta: {
-        page: page + 1,
+        page,
         perPage,
         total,
       },
@@ -132,7 +132,7 @@ export class GetBooksHandler implements IQueryHandler<GetBooksQuery> {
           },
         },
         orderBy: this.getOrderBy(order),
-        skip: page * perPage,
+        skip: (page - 1) * perPage,
         take: perPage,
       }),
     ]);
