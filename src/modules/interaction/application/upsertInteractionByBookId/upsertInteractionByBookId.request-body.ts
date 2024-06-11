@@ -21,6 +21,6 @@ export class UpsertInteractionByBookIdRequestBody {
   })
   @IsOptional()
   @IsPositive()
-  @Max(5)
+  @Max(10)
   value?: number;
 }

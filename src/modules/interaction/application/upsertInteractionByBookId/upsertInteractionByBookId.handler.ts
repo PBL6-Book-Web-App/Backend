@@ -19,7 +19,7 @@ export class UpdateUserByIdHandler
 
     const { book } = await this.validate({ bookId, userId });
 
-    const { newValue, existedInteraction } = await this.getValue({ bookId, type, value, userId });
+    const { oldValue, newValue, existedInteraction } = await this.getValue({ bookId, type, value, userId });
 
     await this.dbContext.$transaction(async (trx) => {
       await trx.interaction.upsert({
@@ -42,8 +42,17 @@ export class UpdateUserByIdHandler
       });
 
       if (type === InteractionType.RATING) {
-        const newNumberOfRatings = (book.numberOfRatings + 1);
-        const newAvgRating = (book.averageRating * book.numberOfRatings + newValue) / newNumberOfRatings;
+        let newNumberOfRatings = 0;
+        let newAvgRating = 0;
+
+        if (existedInteraction) {
+          newNumberOfRatings = book.numberOfRatings;
+          newAvgRating = 
+            (book.averageRating * book.numberOfRatings - oldValue + newValue) / newNumberOfRatings;
+        } else {
+          newNumberOfRatings = (book.numberOfRatings + 1);
+          newAvgRating = (book.averageRating * book.numberOfRatings + newValue) / newNumberOfRatings;
+        }
 
         await trx.book.update({
           where: {
@@ -81,10 +90,11 @@ export class UpdateUserByIdHandler
     });
 
     return {
-      newValue: 
-        type === InteractionType.RATING 
-          ? value : prevInteraction 
-          ? prevInteraction.value + 1 : 1,
+      oldValue: prevInteraction?.value ?? 0,
+      newValue:
+        type === InteractionType.RATING
+          ? value : prevInteraction
+            ? prevInteraction.value + 1 : 1,
       existedInteraction: Boolean(prevInteraction)
     };
   }
