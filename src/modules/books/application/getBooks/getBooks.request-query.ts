@@ -3,6 +3,7 @@ import { Gender, Language, Prisma } from "@prisma/client";
 import { Transform, Type } from "class-transformer";
 import {
   IsArray,
+  IsBoolean,
   IsInt,
   IsObject,
   IsOptional,
@@ -94,4 +95,13 @@ export class GetBooksRequestQuery {
   @IsString()
   @IsOrderQueryParam("order", GetBooksOrderByEnum)
   order?: string;
+
+  @ApiPropertyOptional({
+    description: "allow the order field to be nullable",
+    example: false,
+  })
+  @IsOptional()
+  @Type(() => Boolean)
+  @IsBoolean()
+  allowOrderFieldNull?: boolean;
 }

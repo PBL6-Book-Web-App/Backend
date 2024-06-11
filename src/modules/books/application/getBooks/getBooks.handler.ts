@@ -6,10 +6,11 @@ import { GetBooksQueryResponse, GetBooksResponse } from "./getBooks.response";
 import { filterString } from "src/common/utils/string";
 import { PrismaService } from "src/database";
 import { BadRequestException } from "@nestjs/common";
+import { GetBooksOrderByEnum } from "../book.enum";
 
 @QueryHandler(GetBooksQuery)
 export class GetBooksHandler implements IQueryHandler<GetBooksQuery> {
-  constructor(private readonly dbContext: PrismaService) {}
+  constructor(private readonly dbContext: PrismaService) { }
 
   public async execute({
     query,
@@ -49,7 +50,7 @@ export class GetBooksHandler implements IQueryHandler<GetBooksQuery> {
   }
 
   private async getBooks(options: GetBooksRequestQuery) {
-    const { search, languages, price, averageRating, page, perPage, order } =
+    const { search, languages, price, averageRating, page, perPage, order, allowOrderFieldNull } =
       options;
 
     const andWhereConditions: Prisma.Enumerable<Prisma.BookWhereInput> = [];
@@ -97,6 +98,20 @@ export class GetBooksHandler implements IQueryHandler<GetBooksQuery> {
       andWhereConditions.push({
         price: this.getMinMaxCondition(averageRating),
       });
+    }
+
+    if (!allowOrderFieldNull) {
+      const orderEmlements = order?.split(":");
+
+      if (orderEmlements?.length == 2) {
+        const orderField = orderEmlements[0];
+
+        andWhereConditions.push({
+          [orderField]: {
+            not: null
+          }
+        });
+      }
     }
 
     const [total, books] = await Promise.all([
