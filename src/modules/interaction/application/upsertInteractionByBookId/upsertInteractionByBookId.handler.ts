@@ -6,9 +6,8 @@ import { InteractionType } from "@prisma/client";
 
 @CommandHandler(UpsertInteractionByBookIdCommand)
 export class UpdateUserByIdHandler
-  implements ICommandHandler<UpsertInteractionByBookIdCommand>
-{
-  constructor(private readonly dbContext: PrismaService) {}
+  implements ICommandHandler<UpsertInteractionByBookIdCommand> {
+  constructor(private readonly dbContext: PrismaService) { }
 
   public async execute(
     command: UpsertInteractionByBookIdCommand
@@ -18,27 +17,45 @@ export class UpdateUserByIdHandler
       body: { bookId, type, value },
     } = command;
 
-    await this.validate({ bookId, userId });
+    const { book } = await this.validate({ bookId, userId });
 
-    const newValue = await this.getValue({ bookId, type, value, userId });
-    await this.dbContext.interaction.upsert({
-      where: {
-        userId_bookId_type: {
+    const { newValue, existedInteraction } = await this.getValue({ bookId, type, value, userId });
+
+    await this.dbContext.$transaction(async (trx) => {
+      await trx.interaction.upsert({
+        where: {
+          userId_bookId_type: {
+            bookId,
+            userId,
+            type,
+          },
+        },
+        create: {
           bookId,
           userId,
           type,
+          value: newValue,
         },
-      },
-      create: {
-        bookId,
-        userId,
-        type,
-        value: newValue,
-      },
-      update: {
-        value: newValue,
-      },
-    });
+        update: {
+          value: newValue,
+        },
+      });
+
+      if (type === InteractionType.RATING) {
+        const newNumberOfRatings = (book.numberOfRatings + 1);
+        const newAvgRating = (book.averageRating * book.numberOfRatings + newValue) / newNumberOfRatings;
+
+        await trx.book.update({
+          where: {
+            id: bookId
+          },
+          data: {
+            averageRating: newAvgRating,
+            numberOfRatings: newNumberOfRatings
+          }
+        });
+      }
+    })
   }
 
   private async getValue(options: {
@@ -49,24 +66,27 @@ export class UpdateUserByIdHandler
   }) {
     const { type, value, bookId, userId } = options;
 
-    if (type === InteractionType.RATING) {
-      return value;
-    }
 
-    // const prevInteraction = await this.dbContext.interaction.findUnique({
-    //   where: {
-    //     userId_bookId_type: {
-    //       bookId,
-    //       userId,
-    //       type,
-    //     },
-    //   },
-    //   select: {
-    //     value: true,
-    //   },
-    // });
+    const prevInteraction = await this.dbContext.interaction.findUnique({
+      where: {
+        userId_bookId_type: {
+          bookId,
+          userId,
+          type,
+        },
+      },
+      select: {
+        value: true,
+      },
+    });
 
-    // return prevInteraction? prevInteraction.value + 1 : 1;
+    return {
+      newValue: 
+        type === InteractionType.RATING 
+          ? value : prevInteraction 
+          ? prevInteraction.value + 1 : 1,
+      existedInteraction: Boolean(prevInteraction)
+    };
   }
 
   private async validate(option: { bookId: string; userId: string }) {
@@ -79,6 +99,8 @@ export class UpdateUserByIdHandler
         },
         select: {
           id: true,
+          averageRating: true,
+          numberOfRatings: true
         },
       }),
 
@@ -99,5 +121,7 @@ export class UpdateUserByIdHandler
     if (!user) {
       throw new NotFoundException("The user does not exist");
     }
+
+    return { book, user }
   }
 }
