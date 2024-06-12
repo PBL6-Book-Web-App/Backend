@@ -13,4 +13,8 @@ export class InteractionDto {
     required: false,
   })
   value: number;
+  @ApiProperty({
+    required: false,
+  })
+  trained: boolean;
 }

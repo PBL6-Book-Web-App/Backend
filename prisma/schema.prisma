@@ -158,10 +158,11 @@ model Source {
 }
 
 model Interaction {
-  userId String          @map("user_id") @db.VarChar(255)
-  bookId String          @map("book_id")
-  type   InteractionType @default(VIEW) @map("type")
-  value  Float           @map("value") @db.Real
+  userId  String          @map("user_id") @db.VarChar(255)
+  bookId  String          @map("book_id")
+  type    InteractionType @default(VIEW) @map("type")
+  value   Float           @map("value") @db.Real
+  trained Boolean         @default(false) @map("trained")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   book Book @relation(fields: [bookId], references: [id], onDelete: Cascade, onUpdate: Cascade)

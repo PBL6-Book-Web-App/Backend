@@ -1,6 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { ValidationPipe } from "@nestjs/common";
+import { INestApplication, ValidationPipe } from "@nestjs/common";
 import helmet from "helmet";
 import { json, urlencoded } from "express";
 import * as compression from "compression";
@@ -8,6 +8,9 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { config } from "dotenv";
 import * as cookieParser from "cookie-parser";
 import { ConfigService } from "@nestjs/config";
+import { MailerService } from "@nestjs-modules/mailer";
+import { PrismaService } from "./database";
+import { InteractionType } from "@prisma/client";
 
 config();
 const port = process.env.port;
@@ -48,6 +51,34 @@ async function bootstrap() {
 
   const url = await app.getUrl();
   console.log(`Let's come to api document: ${url}/swagger`);
+
+  setInterval(() => checkDailyNewInteractions(app), 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+}
+
+async function checkDailyNewInteractions (app: INestApplication<any>) {
+  {
+    const dbContext = app.get(PrismaService);
+
+    const numberOfNewInteractions = await dbContext.interaction.count({
+      where: {
+        trained: false,
+        type: InteractionType.RATING,
+      },
+    });
+
+    if (numberOfNewInteractions >= 500) {
+      const mailerService = app.get(MailerService);
+      await mailerService.sendMail({
+        to: 'phuoc.dut.udn@gmail.com',
+        from: process.env.EMAIL_SUPPORTER,
+        subject: "Action Required: Retrain Collaborative Model",
+        template: "../templates/retrainCollaborativeModel.hbs",
+        context: {
+          numberOfNewInteractions,
+        },
+      });
+    }
+  }
 }
 
 bootstrap()

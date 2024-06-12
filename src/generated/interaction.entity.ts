@@ -26,6 +26,10 @@ export class InteractionEntity {
   @ApiProperty({
     required: false,
   })
+  trained: boolean;
+  @ApiProperty({
+    required: false,
+  })
   user?: UserEntity;
   @ApiProperty({
     required: false,
