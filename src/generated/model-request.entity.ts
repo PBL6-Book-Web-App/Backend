@@ -1,22 +1,22 @@
-import { InteractionType } from "@prisma/client";
+import { ModelType } from "@prisma/client";
 import { ApiProperty } from "@nestjs/swagger";
 
-export class InteractionDto {
-  @ApiProperty({
-    enum: InteractionType,
-    required: false,
-  })
-  type: InteractionType;
-  @ApiProperty({
-    type: "number",
-    format: "float",
-    required: false,
-  })
-  value: number;
+export class ModelRequestEntity {
   @ApiProperty({
     required: false,
   })
-  trained: boolean;
+  id: string;
+  @ApiProperty({
+    enum: ModelType,
+    required: false,
+  })
+  modelType: ModelType;
+  @ApiProperty({
+    type: "integer",
+    format: "int32",
+    required: false,
+  })
+  count: number;
   @ApiProperty({
     type: "string",
     format: "date-time",

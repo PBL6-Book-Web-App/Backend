@@ -1,9 +1,8 @@
-import { InteractionType } from "@prisma/client";
 import { ApiProperty } from "@nestjs/swagger";
 import { UserEntity } from "./user.entity";
 import { BookEntity } from "./book.entity";
 
-export class InteractionEntity {
+export class RecommendedBookEntity {
   @ApiProperty({
     required: false,
   })
@@ -12,21 +11,6 @@ export class InteractionEntity {
     required: false,
   })
   bookId: string;
-  @ApiProperty({
-    enum: InteractionType,
-    required: false,
-  })
-  type: InteractionType;
-  @ApiProperty({
-    type: "number",
-    format: "float",
-    required: false,
-  })
-  value: number;
-  @ApiProperty({
-    required: false,
-  })
-  trained: boolean;
   @ApiProperty({
     type: "string",
     format: "date-time",
