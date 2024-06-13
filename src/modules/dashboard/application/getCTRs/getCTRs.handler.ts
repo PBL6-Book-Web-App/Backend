@@ -13,35 +13,30 @@ export class GetCTRsHandler
   ) { }
 
   public async execute(): Promise<GetCTRsQueryResponse> {
-    const totalContentBasedClicks = await this.dbContext.interaction.count({
-      where: {
-        type: InteractionType.VIEW_CONTENT_BASED
-      }
+    const totalInteractions = await this.dbContext.interaction.groupBy({
+      by: 'type',
+      _sum: { value: true }
     });
 
-    const totalContentBasedImpressions = await this.dbContext.modelRequest.count({
-      where: {
-        modelType: ModelType.CONTENT_BASED
-      }
-    });
-    
-    const totalCollaborativeClicks = await this.dbContext.interaction.count({
-      where: {
-        type: InteractionType.VIEW_COLLABORATIVE
-      }
+    const totalContentBasedClicks = totalInteractions.find(i => i.type === InteractionType.VIEW_CONTENT_BASED)?._sum.value ?? 0;
+    const totalCollaborativeClicks = totalInteractions.find(i => i.type === InteractionType.VIEW_COLLABORATIVE)?._sum.value ?? 0;
+
+    const totalImpressions = await this.dbContext.modelRequest.groupBy({
+      by: 'modelType',
+      _sum: { count: true }
     });
 
-    const totalCollaborativeImpressions = await this.dbContext.modelRequest.count({
-      where: {
-        modelType: ModelType.COLLABORATIVE
-      }
-    });
 
-    // console.log({ totalContentBasedClicks, totalContentBasedImpressions, totalCollaborativeClicks, totalCollaborativeImpressions})
+    const totalContentBasedImpressions = totalImpressions.find(mr => mr.modelType === ModelType.CONTENT_BASED)?._sum.count ?? 0;
+    const totalCollaborativeImpressions = totalImpressions.find(mr => mr.modelType === ModelType.COLLABORATIVE)?._sum.count ?? 0;
 
     return {
       CTR_CONTENT_BASED: totalContentBasedClicks / totalContentBasedImpressions,
       CTR_COLLABORATIVE: totalCollaborativeClicks / totalCollaborativeImpressions,
+      totalContentBasedClicks,
+      totalContentBasedImpressions,
+      totalCollaborativeClicks, 
+      totalCollaborativeImpressions
     };
   }
 }
