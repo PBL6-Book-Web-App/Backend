@@ -1,0 +1,2 @@
+# PRISMA
+Sửa trong file schema.prisma -> npx prisma migrate
